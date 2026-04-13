@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>GO²JEK ON TIME - Profil & WhatsApp Integration</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 30%, #0b2b1f, #05180f);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px 16px;
+        }
+
+        .app-container {
+            max-width: 560px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .gojek-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 48px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+
+        /* Header dengan foto profil */
+        .brand-header {
+            background: linear-gradient(135deg, #00a86b, #006e45);
+            padding: 20px 24px 16px 24px;
+            color: white;
+            position: relative;
+        }
+
+        .profile-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(4px);
+            padding: 6px 16px 6px 8px;
+            border-radius: 60px;
+        }
+
+        .profile-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #ffd966;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #006e45;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-text {
+            line-height: 1.3;
+        }
+
+        .profile-text .user-greeting {
+            font-size: 0.7rem;
+            opacity: 0.9;
+        }
+
+        .profile-text .user-name-header {
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: -0.3px;
+        }
+
+        .edit-profile-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 30px;
+            padding: 8px 14px;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .edit-profile-btn:hover {
+            background: rgba(255,255,255,0.35);
+        }
+
+        .brand-title {
+            margin-top: 8px;
+        }
+
+        .brand-title h1 {
+            font-size: 1.7rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .brand-title h1 i {
+            font-size: 1.6rem;
+        }
+
+        .brand-sub {
+            font-size: 0.65rem;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .badge {
+            background: rgba(255,255,240,0.2);
+            backdrop-filter: blur(2px);
+            font-size: 0.65rem;
+            font-weight: 500;
+            border-radius: 40px;
+            padding: 4px 12px;
+            display: inline-block;
+            margin-top: 6px;
+        }
+
+        .promo-banner {
+            background: #ffeed9;
+            margin: 16px 20px 0 20px;
+            border-radius: 32px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .promo-text {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #b45309;
+        }
+
+        .copy-code {
+            background: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: #00a86b;
+            cursor: pointer;
+        }
+
+        .form-panel {
+            padding: 24px 24px 32px 24px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1f2a3e;
+            margin-bottom: 6px;
+        }
+
+        .input-label i {
+            color: #00a86b;
+            width: 20px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 28px;
+            border: 1.5px solid #e9edf2;
+            background: #ffffff;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #00a86b;
+            box-shadow: 0 0 0 3px rgba(0,168,107,0.2);
+        }
+
+        .row-dual {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .row-dual .input-group {
+            flex: 1;
+        }
+
+        .service-tiles {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .service-option {
+            flex: 1;
+            background: #f8fafc;
+            border-radius: 32px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            border: 1.5px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .service-option i {
+            font-size: 1.6rem;
+            color: #5c6f87;
+        }
+
+        .service-option span {
+            font-weight: 600;
+            font-size: 0.7rem;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .service-option.active {
+            background: #e5f9ef;
+            border-color: #00a86b;
+        }
+
+        .service-option.active i {
+            color: #008c54;
+        }
+
+        .btn-primary {
+            background: #00a86b;
+            width: 100%;
+            border: none;
+            padding: 14px;
+            border-radius: 44px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: #008c54;
+            transform: translateY(-2px);
+        }
+
+        .btn-wa {
+            background: #25D366;
+        }
+
+        .btn-wa:hover {
+            background: #20b859;
+        }
+
+        .btn-secondary {
+            background: #f0f3f8;
+            color: #1e2a32;
+            box-shadow: none;
+        }
+
+        .price-card {
+            background: linear-gradient(115deg, #f0fcf5, #e4f3ea);
+            border-radius: 48px;
+            padding: 16px;
+            margin: 20px 0 12px;
+            text-align: center;
+        }
+
+        .price-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #2c6e49;
+        }
+
+        #outputHarga {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #006e45;
+        }
+
+        .detail-estimate {
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 6px;
+            color: #4f6f5e;
+        }
+
+        .extra-features {
+            display: flex;
+            gap: 10px;
+            margin: 16px 0 8px;
+            flex-wrap: wrap;
+        }
+
+        .feature-chip {
+            background: #f1f5f9;
+            border-radius: 30px;
+            padding: 6px 14px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .feature-chip.active-promo {
+            background: #ffedd5;
+            color: #b45309;
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2a3e;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.6rem;
+            color: #8b9aad;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #ecf3e9;
+        }
+
+        /* Modal edit profil */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 40px;
+            padding: 28px;
+            width: 90%;
+            max-width: 340px;
+            text-align: center;
+        }
+        .modal-content h3 {
+            margin-bottom: 16px;
+            color: #006e45;
+        }
+        .modal-content input {
+            margin: 12px 0;
+        }
+        .avatar-options {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+        .avatar-opt {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .avatar-opt.selected {
+            border-color: #00a86b;
+            transform: scale(1.05);
+        }
+        .modal button {
+            background: #00a86b;
+            border: none;
+            padding: 10px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="gojek-card">
+        <div class="brand-header">
+            <div class="profile-row">
+                <div class="profile-info" id="profileInfo">
+                    <div class="profile-avatar" id="profileAvatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="profile-text">
+                        <div class="user-greeting">Selamat datang,</div>
+                        <div class="user-name-header" id="headerUserName">Wirqan herari</div>
+                    </div>
+                </div>
+                <button class="edit-profile-btn" id="editProfileBtn"><i class="fas fa-pen"></i> Edit Profil</button>
+            </div>
+            <div class="brand-title">
+                <h1>
+                    <i class="fas fa-bolt"></i> GO²JEK <span style="font-size: 1.2rem;">ON TIME</span>
+                </h1>
+                <div class="brand-sub"><i class="fab fa-whatsapp"></i> Real-time • WA Integration • Profil Aktif</div>
+                <div class="badge"><i class="fas fa-check-circle"></i> Pesan & Konfirmasi via WhatsApp</div>
+            </div>
+        </div>
+
+        <div class="promo-banner">
+            <div class="promo-text"><i class="fas fa-tag"></i> GOFOOD20 — Diskon 20% max Rp10k</div>
+            <button class="copy-code" id="copyPromoBtn"><i class="far fa-copy"></i> Salin kode</button>
+        </div>
+
+        <div class="form-panel">
+            <div class="input-label"><i class="fas fa-motorcycle"></i> Pilih Layanan</div>
+            <div class="service-tiles" id="serviceTiles">
+                <div class="service-option" data-service="goride"><i class="fas fa-motorcycle"></i><span>GoRide</span></div>
+                <div class="service-option" data-service="gocar"><i class="fas fa-car"></i><span>GoCar</span></div>
+                <div class="service-option" data-service="gosend"><i class="fas fa-box"></i><span>GoSend</span></div>
+                <div class="service-option" data-service="gofood"><i class="fas fa-utensils"></i><span>GoFood</span></div>
+            </div>
+            <input type="hidden" id="layanan" value="goride">
+
+            <!-- Nama & No WA (bisa diisi manual atau dari profil) -->
+            <div class="input-group">
+                <div class="input-label"><i class="fas fa-user"></i> Nama Pemesan</div>
+                <input type="text" id="namaUser" placeholder="Nama lengkap" value="Wirqan herari">
+            </div>
+            <div class="input-group">
+                <div class="input-label"><i class="fab fa-whatsapp"></i> No. WhatsApp</div>
+                <input type="tel" id="noWaUser" placeholder="08xxxxxxxxxx" value="6282122528161">
+            </div>
+            <div class="input-group">
+                <div class="input-label"><i class="fas fa-map-pin"></i> Lokasi Penjemputan</div>
+                <input type="text" id="jemput" placeholder="Stasiun, mall" value="Grand Indonesia">
+            </div>
+            <div class="input-group">
+                <div class="input-label"><i class="fas fa-flag-checkered"></i> Lokasi Tujuan</div>
+                <input type="text" id="tujuan" placeholder="Tujuan akhir" value="SCBD Lot 11">
+            </div>
+            <div class="row-dual">
+                <div class="input-group"><div class="input-label"><i class="fas fa-road"></i> Jarak (km)</div><input type="number" id="jarak" step="0.1" value="8.2"></div>
+                <div class="input-group"><div class="input-label"><i class="fas fa-clock"></i> Waktu (menit)</div><input type="number" id="waktuTempuh" step="1" value="22"></div>
+            </div>
+
+            <div class="extra-features">
+                <div class="feature-chip" id="promoChip"><i class="fas fa-gift"></i> Promo 20%</div>
+                <div class="feature-chip" id="insuranceChip"><i class="fas fa-shield-alt"></i> Asuransi +3k</div>
+                <div class="feature-chip" id="priorityChip"><i class="fas fa-crown"></i> Prioritas +5k</div>
+            </div>
+
+            <button class="btn-primary" id="hitungBtn"><i class="fas fa-calculator"></i> Hitung Tarif</button>
+            
+            <div class="price-card">
+                <div class="price-label">TOTAL PERJALANAN</div>
+                <div id="outputHarga">Rp 0</div>
+                <div class="detail-estimate">
+                    <span><i class="fas fa-road"></i> <span id="jarakDetail">0 km</span></span>
+                    <span><i class="fas fa-hourglass"></i> <span id="waktuDetail">0 menit</span></span>
+                    <span><i class="fas fa-tachometer-alt"></i> <span id="layananDetail">GoRide</span></span>
+                </div>
+                <div id="promoDetailText" style="font-size:0.7rem; color:#d97706;"></div>
+            </div>
+
+            <button class="btn-primary" id="pesanBtn"><i class="fas fa-check-circle"></i> Pesan Gojek</button>
+            <button class="btn-primary btn-wa" id="whatsappBtn"><i class="fab fa-whatsapp"></i> Konfirmasi & Kirim WA</button>
+            <button class="btn-primary btn-secondary" id="riwayatBtn"><i class="fas fa-history"></i> Riwayat Terakhir</button>
+            
+            <div class="footer-note">
+                <i class="fas fa-lock"></i> Pembayaran Cash/GoPay • Notifikasi otomatis ke admin & pengguna via WA
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toastMessage" class="toast-msg"></div>
+
+<!-- Modal Edit Profil -->
+<div id="profileModal" class="modal">
+    <div class="modal-content">
+        <h3><i class="fas fa-user-edit"></i> Edit Profil</h3>
+        <input type="text" id="editNama" placeholder="Nama Lengkap">
+        <input type="tel" id="editNoWa" placeholder="Nomor WhatsApp">
+        <div class="avatar-options" id="avatarOptions">
+            <div class="avatar-opt" data-avatar="😎">😎</div>
+            <div class="avatar-opt" data-avatar="👨‍💻">👨‍💻</div>
+            <div class="avatar-opt" data-avatar="👩‍🦰">👩‍🦰</div>
+            <div class="avatar-opt" data-avatar="🐱">🐱</div>
+            <div class="avatar-opt" data-avatar="⭐">⭐</div>
+        </div>
+        <button id="saveProfileBtn">Simpan Profil</button>
+        <button id="closeModalBtn" style="background:#ccc; color:#333; margin-top:8px;">Tutup</button>
+    </div>
+</div>
+
+<script>
+    // ---------- State & Data ----------
+    let userProfile = {
+        nama: "Wirqan herari",
+        noWa: "6282122528161",
+        avatar: "😎"
+    };
+    
+    let promoActive = false, insuranceActive = false, priorityActive = false;
+    let currentService = "goride";
+    let lastOrder = null;
+    let notificationList = [];
+    const ADMIN_WA_NUMBER = "6282122528161"; // GANTI DENGAN NOMOR ADMIN ASLI
+    
+    // DOM Elements
+    const headerUserName = document.getElementById('headerUserName');
+    const profileAvatarDiv = document.getElementById('profileAvatar');
+    const namaUserInput = document.getElementById('namaUser');
+    const noWaUserInput = document.getElementById('noWaUser');
+    const jarakInput = document.getElementById('jarak');
+    const waktuInput = document.getElementById('waktuTempuh');
+    const outputHargaDiv = document.getElementById('outputHarga');
+    const jarakDetailSpan = document.getElementById('jarakDetail');
+    const waktuDetailSpan = document.getElementById('waktuDetail');
+    const layananDetailSpan = document.getElementById('layananDetail');
+    const promoDetailSpan = document.getElementById('promoDetailText');
+    const jemputInput = document.getElementById('jemput');
+    const tujuanInput = document.getElementById('tujuan');
+    
+    // Helper Functions
+    function updateProfileUI() {
+        headerUserName.innerText = userProfile.nama;
+        profileAvatarDiv.innerHTML = `<span style="font-size:1.8rem;">${userProfile.avatar}</span>`;
+        namaUserInput.value = userProfile.nama;
+        noWaUserInput.value = userProfile.noWa;
+    }
+    
+    function showToast(msg, isError = false) {
+        const toast = document.getElementById('toastMessage');
+        toast.innerText = msg;
+        toast.style.backgroundColor = isError ? "#d32f2f" : "#1f2a3e";
+        toast.style.opacity = "1";
+        setTimeout(() => toast.style.opacity = "0", 2800);
+    }
+    
+    function addNotification(msg) {
+        notificationList.unshift({ msg, time: new Date().toLocaleTimeString() });
+        showToast(`🔔 ${msg}`);
+        console.log("[NOTIF ADMIN]", msg);
+    }
+    
+    // Tarif
+    function getBaseTarifPerKm(service) {
+        const map = { goride:2000, gocar:4500, gosend:3500, gofood:2500 };
+        return map[service] || 2000;
+    }
+    function getMinFare(service) {
+        const map = { goride:12000, gocar:25000, gosend:15000, gofood:10000 };
+        return map[service] || 10000;
+    }
+    function calculateTotal() {
+        let jarak = parseFloat(jarakInput.value);
+        if (isNaN(jarak) || jarak <= 0) return { final:0 };
+        let tarifKm = getBaseTarifPerKm(currentService);
+        let raw = jarak * tarifKm;
+        let subtotal = Math.max(raw, getMinFare(currentService));
+        let extras = (insuranceActive?3000:0) + (priorityActive?5000:0);
+        let afterExtras = subtotal + extras;
+        let potongan = 0;
+        if (promoActive) potongan = Math.min(afterExtras * 0.2, 10000);
+        return { final: Math.round(afterExtras - potongan), potongan, subtotal, extras };
+    }
+    
+    function refreshHarga() {
+        let jarak = parseFloat(jarakInput.value);
+        if (isNaN(jarak) || jarak <= 0) {
+            outputHargaDiv.innerText = "Rp 0";
+            jarakDetailSpan.innerText = "0 km";
+            return;
+        }
+        let waktu = parseInt(waktuInput.value);
+        if (isNaN(waktu) || waktu <= 0) {
+            waktu = Math.max(5, Math.round(jarak * 3.5));
+            waktuInput.value = waktu;
+        }
+        const result = calculateTotal();
+        outputHargaDiv.innerText = "Rp " + result.final.toLocaleString("id-ID");
+        jarakDetailSpan.innerText = jarak.toFixed(1) + " km";
+        waktuDetailSpan.innerText = waktu + " menit";
+        let nameMap = { goride:"GoRide", gocar:"GoCar", gosend:"GoSend", gofood:"GoFood" };
+        layananDetailSpan.innerText = nameMap[currentService];
+        if (promoActive && result.potongan > 0) promoDetailSpan.innerHTML = `<i class="fas fa-tag"></i> Hemat Rp ${result.potongan.toLocaleString("id-ID")}`;
+        else if (promoActive) promoDetailSpan.innerHTML = `Promo aktif (minimal transaksi)`;
+        else promoDetailSpan.innerHTML = "";
+    }
+    
+    // WhatsApp & Order
+    function getOrderPayload() {
+        let jarak = parseFloat(jarakInput.value);
+        let result = calculateTotal();
+        let serviceNice = { goride:"GoRide", gocar:"GoCar", gosend:"GoSend", gofood:"GoFood" }[currentService];
+        let addons = [];
+        if (insuranceActive) addons.push("Asuransi +3k");
+        if (priorityActive) addons.push("Prioritas +5k");
+        if (promoActive) addons.push("Promo 20%");
+        let addonStr = addons.length ? `\n➕ Ekstra: ${addons.join(", ")}` : "";
+        let potonganStr = result.potongan > 0 ? `\n💸 Potongan: Rp ${result.potongan.toLocaleString("id-ID")}` : "";
+        let details = `🚖 *GO²JEK ON TIME - ORDER*\n\n👤 Nama: ${userProfile.nama}\n📱 WA: ${userProfile.noWa}\n🛵 Layanan: ${serviceNice}\n📍 Jemput: ${jemputInput.value.trim()}\n🎯 Tujuan: ${tujuanInput.value.trim()}\n📏 Jarak: ${jarak} km\n⏱️ ETA: ${waktuInput.value} menit\n💰 Total: Rp ${result.final.toLocaleString("id-ID")}${addonStr}${potonganStr}\n\n✅ Pesanan siap. Silakan lanjutkan pembayaran ke driver. Terima kasih!`;
+        return { details, finalBiaya: result.final, serviceNice };
+    }
+    
+    function validateOrder() {
+        if (jemputInput.value.trim() === "" || tujuanInput.value.trim() === "") { showToast("Lokasi wajib diisi!", true); return false; }
+        let jarak = parseFloat(jarakInput.value);
+        if (isNaN(jarak) || jarak <= 0) { showToast("Jarak tidak valid!", true); return false; }
+        if (userProfile.nama === "") { showToast("Nama profil kosong", true); return false; }
+        if (userProfile.noWa === "" || userProfile.noWa.length < 9) { showToast("Nomor WA tidak valid", true); return false; }
+        return true;
+    }
+    
+    function pesanSekarang() {
+        if (!validateOrder()) return;
+        let result = calculateTotal();
+        let serviceNice = { goride:"GoRide", gocar:"GoCar", gosend:"GoSend", gofood:"GoFood" }[currentService];
+        lastOrder = {
+            layanan: serviceNice, jemput: jemputInput.value.trim(), tujuan: tujuanInput.value.trim(),
+            jarak: jarakInput.value, total: result.final, waktu: waktuInput.value,
+            nama: userProfile.nama, noWa: userProfile.noWa, promo: promoActive
+        };
+        addNotification(`📦 Pesanan baru: ${serviceNice} - ${userProfile.nama} (Rp ${result.final.toLocaleString("id-ID")})`);
+        alert(`✅ PESANAN BERHASIL!\n\nLayanan: ${serviceNice}\nNama: ${userProfile.nama}\nTotal: Rp ${result.final.toLocaleString("id-ID")}\n\nNotifikasi sudah dikirim ke admin. Gunakan tombol WhatsApp untuk konfirmasi ke pelanggan & admin.`);
+    }
+    
+    function kirimKeWhatsApp() {
+        if (!validateOrder()) return;
+        const order = getOrderPayload();
+        const userPhone = userProfile.noWa;
+        const adminPhone = ADMIN_WA_NUMBER;
+        const userMsg = `Halo ${userProfile.nama}!\n\n${order.details}\n\nSilakan selesaikan pembayaran ke driver. Terima kasih! 🚀`;
+        const adminMsg = `🔔 *ADMIN NOTIF - PESANAN BARU*\n\n${order.details}\n\n🕒 Waktu: ${new Date().toLocaleString()}\nSegera proses driver.`;
+        
+        sendWa(userPhone, userMsg);
+        sendWa(adminPhone, adminMsg);
+        addNotification(`WhatsApp terkirim ke ${userProfile.nama} & Admin`);
+        showToast("Pesan WhatsApp dikirim ke pelanggan & admin!");
+    }
+    
+    function sendWa(phone, message) {
+        if (!phone) return;
+        let clean = phone.replace(/\D/g, '');
+        if (clean.startsWith('0')) clean = '62' + clean.substring(1);
+        if (!clean.startsWith('62')) clean = '62' + clean;
+        window.open(`https://wa.me/${clean}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+    
+    // Event Listeners & Modal
+    const editBtn = document.getElementById('editProfileBtn');
+    const modal = document.getElementById('profileModal');
+    const saveProfileBtn = document.getElementById('saveProfileBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const editNama = document.getElementById('editNama');
+    const editNoWa = document.getElementById('editNoWa');
+    let selectedAvatar = userProfile.avatar;
+    
+    function openModal() {
+        editNama.value = userProfile.nama;
+        editNoWa.value = userProfile.noWa;
+        selectedAvatar = userProfile.avatar;
+        renderAvatarOptions();
+        modal.style.display = 'flex';
+    }
+    
+    function renderAvatarOptions() {
+        const container = document.getElementById('avatarOptions');
+        const avatars = ['😎', '👨‍💻', '👩‍🦰', '🐱', '⭐', '🚖', '🍔'];
+        container.innerHTML = '';
+        avatars.forEach(av => {
+            const div = document.createElement('div');
+            div.className = 'avatar-opt' + (selectedAvatar === av ? ' selected' : '');
+            div.innerText = av;
+            div.setAttribute('data-avatar', av);
+            div.onclick = () => {
+                document.querySelectorAll('.avatar-opt').forEach(opt => opt.classList.remove('selected'));
+                div.classList.add('selected');
+                selectedAvatar = av;
+            };
+            container.appendChild(div);
+        });
+    }
+    
+    saveProfileBtn.onclick = () => {
+        let newNama = editNama.value.trim();
+        let newNoWa = editNoWa.value.trim();
+        if (newNama === "") newNama = "Pelanggan";
+        if (newNoWa === "") newNoWa = "6282122528161";
+        userProfile = { nama: newNama, noWa: newNoWa, avatar: selectedAvatar };
+        updateProfileUI();
+        modal.style.display = 'none';
+        showToast("Profil berhasil diperbarui!");
+    };
+    closeModalBtn.onclick = () => modal.style.display = 'none';
+    editBtn.onclick = openModal;
+    window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+    
+    // Service Tiles
+    document.querySelectorAll('.service-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+            document.querySelectorAll('.service-option').forEach(o => o.classList.remove('active'));
+            opt.classList.add('active');
+            currentService = opt.getAttribute('data-service');
+            document.getElementById('layanan').value = currentService;
+            refreshHarga();
+        });
+    });
+    document.querySelector('.service-option').classList.add('active');
+    
+    // Chips
+    document.getElementById('promoChip').onclick = () => { promoActive = !promoActive; document.getElementById('promoChip').classList.toggle('active-promo'); refreshHarga(); showToast(promoActive ? "Promo 20% aktif" : "Promo nonaktif"); };
+    document.getElementById('insuranceChip').onclick = () => { insuranceActive = !insuranceActive; refreshHarga(); showToast(insuranceActive ? "Asuransi +3k" : "Asuransi dihapus"); };
+    document.getElementById('priorityChip').onclick = () => { priorityActive = !priorityActive; refreshHarga(); showToast(priorityActive ? "Prioritas +5k" : "Prioritas dihapus"); };
+    
+    document.getElementById('hitungBtn').onclick = () => { refreshHarga(); showToast("Tarif dihitung ulang"); };
+    document.getElementById('pesanBtn').onclick = pesanSekarang;
+    document.getElementById('whatsappBtn').onclick = kirimKeWhatsApp;
+    document.getElementById('riwayatBtn').onclick = () => {
+        if (lastOrder) {
+            alert(`📋 Riwayat Pesanan:\n${lastOrder.layanan}\n${lastOrder.jemput} → ${lastOrder.tujuan}\nRp ${lastOrder.total.toLocaleString("id-ID")}\nNama: ${lastOrder.nama}\n\nTekan OK untuk memuat ulang.`);
+            jemputInput.value = lastOrder.jemput;
+            tujuanInput.value = lastOrder.tujuan;
+            jarakInput.value = lastOrder.jarak;
+            waktuInput.value = lastOrder.waktu;
+            refreshHarga();
+        } else showToast("Belum ada pesanan", true);
+    };
+    document.getElementById('copyPromoBtn').onclick = () => { navigator.clipboard.writeText("GOFOOD20"); showToast("Kode promo disalin!"); };
+    
+    jarakInput.addEventListener('input', () => {
+        refreshHarga();
+        let j = parseFloat(jarakInput.value);
+        if (!isNaN(j) && j > 0 && (!waktuInput.value || waktuInput.value <= 0)) waktuInput.value = Math.max(5, Math.round(j * 3.3));
+        refreshHarga();
+    });
+    waktuInput.addEventListener('input', refreshHarga);
+    jemputInput.addEventListener('change', refreshHarga);
+    tujuanInput.addEventListener('change', refreshHarga);
+    
+    // Inisialisasi
+    updateProfileUI();
+    refreshHarga();
+    showToast("✨ GO²JEK ON TIME | Profil & WhatsApp siap digunakan");
+</script>
+</body>
+</html>
